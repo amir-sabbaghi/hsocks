@@ -1,0 +1,14 @@
+resolver: ghc-8.0.2
+
+packages:
+- .
+extra-deps:
+- socket-0.8.0.1
+- optparse-applicative-0.14.0.0
+- ansi-wl-pprint-0.6.8.1
+- transformers-compat-0.5.1.4
+- ansi-terminal-0.7.1.1
+- colour-2.3.4
+- split-0.2.3.2
+- async-2.1.1.1
+- stm-2.4.4.1
