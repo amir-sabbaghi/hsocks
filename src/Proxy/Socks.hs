@@ -9,6 +9,8 @@ import System.Socket.Family.Inet
 import System.Socket.Protocol.TCP
 import System.Socket.Type.Stream
 
+import Proxy.Utils
+
 relay :: Socket Inet Stream TCP -> SocketAddress Inet -> SocketAddress Inet -> IO ()
 relay c proxy dest = do s <- socket :: IO (Socket Inet Stream TCP)
                         connect s proxy
@@ -20,14 +22,6 @@ relay c proxy dest = do s <- socket :: IO (Socket Inet Stream TCP)
                         b <- receive s 8 mempty
                         let [0, status, _, _, _, _, _, _] = unpack b
                         if status == 0x5A then
-                          do a <- async $ transfer c s
-                             b <- async $ transfer s c
-                             waitAnyCancel [a, b]
-                             return ()
+                          transfer c s
                         else
                           return ()
-
-transfer :: Socket f Stream p -> Socket f Stream p -> IO ()
-transfer r s = do b <- receive r (1024*1024) mempty
-                  sendAll s b mempty
-                  transfer r s

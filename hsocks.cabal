@@ -11,6 +11,7 @@ executable hsocks
   main-is: Main.hs
   other-modules: Proxy
                , Types
+               , Proxy.Utils
                , Proxy.Socks
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends: base >=4.7 && <5
