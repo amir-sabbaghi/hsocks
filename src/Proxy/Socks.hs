@@ -1,5 +1,5 @@
-module Socks ( relay
-             ) where
+module Proxy.Socks ( relay
+                   ) where
 
 import Control.Concurrent.Async
 import Data.ByteString

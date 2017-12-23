@@ -5,14 +5,13 @@ import System.Socket
 import System.Socket.Family.Inet
 import System.Socket.Type.Stream
 import System.Socket.Protocol.TCP
-import System.Socket.Unsafe
 
 import Data.Monoid
 import Data.List.Split
 import Options.Applicative
-import Text.Read
 
-import qualified Socks
+import Proxy
+import Types
 
 data Flags = Flags
     { flagListenHost :: String
@@ -21,15 +20,6 @@ data Flags = Flags
     , flagProxyHost  :: String
     , flagProxyPort :: Integer
     }
-
-data ProxyType = SocksProxy
-
-instance Read ProxyType where
-  readPrec = parens (do Ident s <- lexP
-                        case s of
-                          "socks5" -> return SocksProxy
-                          _        -> pfail
-                    )
 
 parseFlags :: Parser Flags
 parseFlags = Flags
@@ -60,7 +50,3 @@ server l t p = do s <- socket :: IO (Socket Inet Stream TCP)
                   listen s 100
                   forever $ do (s, _) <- accept s
                                forkIO $ finally (handleConnection s t p) (close s)
-
-handleConnection :: Socket Inet Stream TCP -> ProxyType -> SocketAddress Inet -> IO ()
-handleConnection s SocksProxy proxy = do addr <- unsafeGetSocketOption s 0 80
-                                         Socks.relay s proxy addr

@@ -9,7 +9,9 @@ cabal-version:  >= 1.10
 executable hsocks
   hs-source-dirs: src
   main-is: Main.hs
-  other-modules: Socks
+  other-modules: Proxy
+               , Types
+               , Proxy.Socks
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends: base >=4.7 && <5
                , socket
