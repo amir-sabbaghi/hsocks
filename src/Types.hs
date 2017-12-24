@@ -1,5 +1,6 @@
 module Types where
 
+import Data.ByteString
 import Text.Read
 
 data ProxyType = SocksProxy
@@ -12,3 +13,5 @@ instance Read ProxyType where
                           "http"  -> return HTTPProxy
                           _       -> pfail
                     )
+
+type ProxyAuth = Maybe (ByteString, ByteString)

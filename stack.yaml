@@ -12,3 +12,4 @@ extra-deps:
 - split-0.2.3.2
 - async-2.1.1.1
 - stm-2.4.4.1
+- base64-bytestring-1.0.0.1
