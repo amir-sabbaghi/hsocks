@@ -36,17 +36,16 @@ main :: IO ()
 main = do (Flags host port pt ph pp) <- execParser opts
           let addr = parseHost host
               t = read pt
-              proxy = parseHost ph
-          server (SocketAddressInet addr $ fromInteger port) t (SocketAddressInet proxy $ fromInteger pp)
+          server (SocketAddressInet addr $ fromInteger port) t ph (fromInteger pp)
             where opts = info (parseFlags <**> helper)
                               (fullDesc <> progDesc "This is hsocks server"
                                         <> header "hsocks - a plain to transparent proxy middleware")
 
 
-server :: SocketAddress Inet -> ProxyType -> SocketAddress Inet -> IO ()
-server l t p = do s <- socket :: IO (Socket Inet Stream TCP)
-                  setSocketOption s (ReuseAddress True)
-                  bind s l
-                  listen s 100
-                  forever $ do (s, _) <- accept s
-                               forkIO $ finally (handleConnection s t p) (close s)
+server :: SocketAddress Inet -> ProxyType -> String -> InetPort -> IO ()
+server l t ph pp = do s <- socket :: IO (Socket Inet Stream TCP)
+                      setSocketOption s (ReuseAddress True)
+                      bind s l
+                      listen s 100
+                      forever $ do (s, _) <- accept s
+                                   forkIO $ finally (handleConnection s t ph pp) (close s)
