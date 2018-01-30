@@ -30,7 +30,8 @@ relay c proxy dest auth =
          header = BS.concat $ ["CONNECT ", host, " HTTP/1.0\r\n"] ++ authHeader ++ ["\r\n"]
      sendAll s header mempty
      (b, r) <- recvHeader s
-     when (BS.isPrefixOf "HTTP/1.0 200" b) $ do sendAll c r mempty
+     when (BS.isPrefixOf "HTTP/1.0 200" b ||
+           BS.isPrefixOf "HTTP/1.1 200" b) $ do sendAll c r mempty
                                                 debugM "Proxy.HTTP" $ "Proxy connection established, transfering data"
                                                 transfer c s
 
