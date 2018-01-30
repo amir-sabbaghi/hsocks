@@ -22,4 +22,5 @@ executable hsocks
                , bytestring
                , async
                , base64-bytestring
+               , hslogger
   default-language: Haskell2010

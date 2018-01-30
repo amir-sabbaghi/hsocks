@@ -7,6 +7,7 @@ import Control.Monad (when)
 import Data.ByteString.Base64 (encode)
 import qualified Data.ByteString.Char8 as BS
 import Data.List
+import System.Log.Logger
 import System.Socket
 import System.Socket.Family.Inet
 import System.Socket.Protocol.TCP
@@ -30,6 +31,7 @@ relay c proxy dest auth =
      sendAll s header mempty
      (b, r) <- recvHeader s
      when (BS.isPrefixOf "HTTP/1.0 200" b) $ do sendAll c r mempty
+                                                debugM "Proxy.HTTP" $ "Proxy connection established, transfering data"
                                                 transfer c s
 
 recvHeader :: Socket Inet Stream TCP -> IO (BS.ByteString, BS.ByteString)
